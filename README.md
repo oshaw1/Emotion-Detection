@@ -1,2 +1,5 @@
 # Emotion-Detection
-Emotion detection using neural networks and machine learning and subsequent testing of models 
+I developed a neural network for this project to analyse emotions via a webcam. I collected image-based datasets and used them to train the algorithm to recognize and understand different emotions as they are expressed. I also experimented with a range of different neural networks and machine learning algorithms to find the best approach for the analysis. Overall, it was a challenging but rewarding experience that allowed me to apply my knowledge and skills in the field of machine learning and artificial intelligence.
+As part of my project, I used Python functions to plot and record data for analysis. These functions were instrumental in visualizing and understanding the results of my emotion analysis model.
+
+For data plotting, I used the popular Python library Matplotlib . This library provide a wide range of customizable visualization options, such as line plots, scatter plots, and bar charts, which I used to represent the data in a clear and meaningful way. For example, I used a line plot to show the change in emotion over time, and a bar chart to compare the performance of different neural networks.
