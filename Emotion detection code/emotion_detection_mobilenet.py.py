@@ -95,30 +95,37 @@ Y = np.array(Y)
 
 X = X / 255.0
 
-model = tf.keras.applications.MobileNetV2()  # CHANGE THIS TO TEST DIFFERENT ML MODELS
+# Check if the model file exists before creating a new model
+model_save_path = 'MobTest.h5'
+if os.path.exists(model_save_path):
+    # Load the existing model
+    new_model = keras.models.load_model(model_save_path)
+else:
+    # Create the model
+    model = tf.keras.applications.MobileNetV2()
+    base_input = model.layers[0].input
+    base_output = model.layers[-2].output
+    final_output = layers.Dense(128)(base_output) 
+    final_output = layers.Activation('relu')(final_output) 
+    final_output = layers.Dense(64)(final_output)
+    final_output = layers.Activation('relu')(final_output)
+    final_output = layers.Dense(7, activation='softmax')(final_output) 
 
-base_input = model.layers[0].input
-base_output = model.layers[-2].output
-final_output = layers.Dense(128)(base_output) 
-final_output = layers.Activation('relu')(final_output) 
-final_output = layers.Dense(64)(final_output)
-final_output = layers.Activation('relu')(final_output)
-final_output = layers.Dense(7, activation='softmax')(final_output) 
+    new_model = keras.Model(inputs=base_input, outputs=final_output)
 
-new_model = keras.Model(inputs=base_input, outputs=final_output)
+    new_model.compile(loss='categorical_crossentropy', 
+                      optimizer=adam_v2.Adam(learning_rate=0.0001, decay=1e-7), metrics=['accuracy'])
 
-new_model.compile(loss='categorical_crossentropy', 
-                  optimizer=adam_v2.Adam(learning_rate=0.0001, decay=1e-7), metrics=['accuracy'])
+    # Training the model
+    modelInfo = new_model.fit(
+        train_generator,
+        steps_per_epoch=28709 // 64,
+        epochs=35,
+        validation_data=test_generator,
+        validation_steps=7178 // 64)
 
-modelInfo = new_model.fit(
-    train_generator,
-    steps_per_epoch=28709 // 64,
-    epochs=35,
-    validation_data=test_generator,
-    validation_steps=7178 // 64)
-
-new_model.save('MobTest.h5')
-
+    # Save the trained model
+    new_model.save(model_save_path)
 
 path = ".\\haarcascade_frontalface_default.xml"
 font_scale = 1.5

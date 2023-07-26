@@ -67,6 +67,7 @@ modelInfo = model.fit(
         validation_data=test_generator,
         validation_steps=7178 // 64)
 
+# Save the trained model
 model.save('SeqTEST.h5')
 
 acc = modelInfo.history['accuracy']
